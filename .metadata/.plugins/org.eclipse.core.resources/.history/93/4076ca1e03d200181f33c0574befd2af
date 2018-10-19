@@ -1,0 +1,42 @@
+package receiver1;
+
+import java.sql.Connection;
+import java.util.Queue;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+public class MainRec {
+	public static void main(String args[])
+	
+	ConnectionFactory connectionFactory;
+	Connection connection = null;
+	
+	try {
+		
+		InitialContext intialContext = new InitialContext();
+		Queue queue = (Queue) intialContext.lookup("JSQueue");
+		connectionFactory =  
+				(ConnectionFactory) intialContext.lookup("jms/__defaultConnectionFactory");
+		
+		connection = connectionFactory.createConnection();
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		connection.start();
+		
+		
+		
+		
+	} catch (NamingException e) {
+		e.printStackTrace();
+	} catch (JMSException e) {
+		e.printStackTrace();
+	}finally {
+		if (connection != null) try {
+			connection.close();
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+}
